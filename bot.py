@@ -22,14 +22,20 @@ async def on_ready():
     print("Ready!")
     synced = await bot.tree.sync()
     print(f"Synced {len(synced)} commands")
-
+guess_count = {}
 
 @bot.tree.command(
     name="guess",
     description="Guess the song from the lyrics. Requires spotify oauth connection.",
 )
 async def guess(interaction: discord.Interaction):
-    await interaction.response.send_message("To be implemented...")
+    user_id = interaction.user.id
+    guess_count[user_id] = guess_count.get(user_id, 0) + 1
+
+    await interaction.response.send_message(
+        f"You have made {guess_count[user_id]} guesses so far."
+    )
+    
 
 
 bot.run(TOKEN)
