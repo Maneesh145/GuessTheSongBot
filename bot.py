@@ -1,5 +1,5 @@
 import json
-
+import logging
 import discord
 from discord.ext import commands
 
@@ -15,27 +15,22 @@ bot = commands.Bot(
     is_case_insensitive=True,
     intents=discord.Intents.all(),
 )
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.getLogger(__name__)
 
 
 @bot.event
 async def on_ready():
-    print("Ready!")
-    synced = await bot.tree.sync()
-    print(f"Synced {len(synced)} commands")
-guess_count = {}
+    logger.info("Bot is ready")
+    await bot.tree.sync()
 
-@bot.tree.command(
-    name="guess",
-    description="Guess the song from the lyrics. Requires spotify oauth connection.",
-)
+@bot.tree.command(name="guess")
 async def guess(interaction: discord.Interaction):
-    user_id = interaction.user.id
-    guess_count[user_id] = guess_count.get(user_id, 0) + 1
-
-    await interaction.response.send_message(
-        f"You have made {guess_count[user_id]} guesses so far."
-    )
-    
-
+    logger.info(f"/guess called by {interaction.user.id}")
+    await interaction.response.send_message("Guess feature is under development.")
 
 bot.run(TOKEN)
